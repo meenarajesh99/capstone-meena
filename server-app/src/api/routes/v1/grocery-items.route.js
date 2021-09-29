@@ -61,19 +61,37 @@ router.get('/', (req, res) => {
    */
 router.get('/:type', (req, res) => {
   const type = req.params.type;
-
-  if(type && type === 'fruit' || type === 'vegetable') {
+  const formatItems = items => items.map(item => ({ name: item.name, type: item.type}))
+  if(type === 'fruit' || type === 'vegetable') {
     GroceryItem
       .find({ type: type })
-      .then(desiredItems => res.send(formatItems(desiredItems)))
+      .then(desiredItems => {
+        res.send(formatItems(desiredItems))
+      })
       // Error handling
       .catch(error => res.send(`Error - ${JSON.stringify(error)}`));
   }
 
-  else {
-    res.send(`Invalid route - ${req.path}. Valid routes are 'fruit', 'vegetable'`)
-  }
+  // else {
+  //   res.send(`Invalid route - ${req.path}. Valid routes are 'fruit', 'vegetable'`)
+  // }
 })
+
+// router.get('/:type', (req, res) => {
+//   const type = req.params.type;
+
+//   if(type === 'fruit' || type === 'vegetable') {
+//     GroceryItem
+//       .find({ type: type })
+//       .then(desiredItems => res.send(formattedItems(desiredItems)))
+//       // Error handling
+//       .catch(error => res.send(`Error - ${JSON.stringify(error)}`));
+//   }
+
+//   else {
+//     res.send(`Invalid route - ${req.path}. Valid routes are 'fruit', 'vegetable'`)
+//   }
+// })
 
 // TODO: Add apidoc documentation
 router.post('/', (req, res) => {

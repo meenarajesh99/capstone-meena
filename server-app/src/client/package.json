@@ -13,11 +13,13 @@
     "react-dom": "^17.0.2",
     "react-router": "^5.2.1",
     "react-router-dom": "^5.2.1",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^4.0.3",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
+    
+    
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -41,6 +43,9 @@
     ]
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0"
+    "@types/axios": "^0.14.0",
+    "concurrently": "^2.2.0",
+    "typescript": "^1.8.10",
+    "nodemon": "^1.9.2"
   }
 }

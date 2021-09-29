@@ -1,3 +1,5 @@
+const path = require('path'); 
+
 /** npm module imports */
 const express = require('express');
 const mongoose = require('mongoose');
@@ -12,10 +14,14 @@ const routes = require('./api/routes/v1');
 // Miscellaneos
 const GROCERY_ITEMS = require('./test/data/grocery-items');
 
+var cors = require('cors');
+const { PRIORITY_ABOVE_NORMAL } = require('constants');
+const { send } = require('process');
 
 // db config
 const DB_NAME = 'capstone';
-const DB_URL = `mongodb://localhost:27017/${DB_NAME}`;
+//const DB_URL = `mongodb://localhost:27017/${DB_NAME}`;
+const DB_URL=process.env.DB_URL;
 
 /** Connect to our MongoDB database  
  **/
@@ -27,8 +33,9 @@ mongoose.connection.on('error', (error) => `MongoDB: Failed to connected to ${DB
 // IMPORTANT: If you are connecting to a database on your local machine be sure it is running first.
 // We have to do this before we can save any Models to the database or get data from database.
 console.log('MongoDB: Attempting to connect ...');
-mongoose
-  .connect(`mongodb://localhost:27017/${DB_NAME}`)
+`mongoose
+  .connect(DB_URL)`
+ // .connect(`mongodb://localhost:27017/${DB_NAME}`)
   // handle error messages after successfully connectiong
   .catch(error => console.error(`MongoDB: Error ${error}`));
 
@@ -50,7 +57,7 @@ GROCERY_ITEMS.forEach(item => {
  * **/
 
 // express server config
-const PORT = 9999;
+const PORT = process.env.PORT;
 
 console.log('starting express')
 const app = express();
@@ -64,6 +71,9 @@ app.use(express.json());
 // Handle CORS (cross-origin-requests) issues so that our react app can be hosted
 // by a different server and still make HTTP requests to this one.
 app.use(cors());
+
+//serve static files from the React App
+app.use(express.static(path.join(__dirname, 'client/build')))
 
 // For development - console each HTTP request to the server
 app.use((req, res, next) => {
@@ -86,6 +96,11 @@ app.get('/', (req, res) => {
 
 /** Mount all our various API routes here */
 app.use('/v1', routes);
+
+/*The catchall handler: for any request that does not match one PRIORITY_ABOVE_NORMAL, send back React's index.html file */
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
 
 /** Start express server  */
 app.listen(PORT, () => {

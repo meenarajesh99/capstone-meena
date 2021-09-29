@@ -1,11 +1,16 @@
 import "./App.css";
+import React, { Component } from 'react';
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
+import dotenv from "dotenv"
 
 // Source code imports
 import ItemsList from "./ItemsList";
 import SelectedItems from "./SelectedItems";
+dotenv.config();
+
+
 
 // Our raw data. In a real app we might get this via an API call instead of it being hardcoded.
 const TYPE_NAMES = {
@@ -16,10 +21,13 @@ const TYPE_NAMES = {
 function App(props) {
   // create the react component state we'll use to store our data
   const [items, setItems] = useState([]);
+  const REACT_APP_API_HOST = process.env.REACT_APP_API_HOST;
+
+const API_GROCERY_ITEMS_ROUTE = `${REACT_APP_API_HOST}/v1/grocery-items`;
 
   useEffect(() => {
     axios
-      .get("http://localhost:9999/grocery-items")
+      .get("API_GROCERY_ITEMS_ROUTE")
       // handle success
       .then((response) => {
         const data = response.data;
